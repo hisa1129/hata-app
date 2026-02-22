@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}手を挙げました！{% endblock %}
+
+{% block content %}
+
+<div class="text-center py-8">
+  <!-- 成功アイコン -->
+  <div class="text-7xl mb-4">🙋</div>
+  <h1 class="text-2xl font-bold text-gray-900 mb-3">手を挙げました！</h1>
+  <p class="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto">
+    旗を立てた人に通知が届きました。
+    返事をお待ちください。
+  </p>
+</div>
+
+<!-- 次のステップ -->
+<div class="bg-white rounded-2xl border border-gray-100 p-5 mb-6">
+  <h2 class="font-bold text-gray-800 mb-4 text-sm">これからの流れ</h2>
+  <div class="space-y-4">
+
+    <div class="flex items-start gap-3">
+      <div class="w-7 h-7 bg-orange-100 rounded-full flex items-center justify-center shrink-0 text-orange-600 font-bold text-xs">1</div>
+      <div>
+        <p class="font-semibold text-gray-800 text-sm">旗を立てた人が確認中</p>
+        <p class="text-xs text-gray-500 mt-0.5">旗を立てた人があなたのプロフィールを確認しています。</p>
+      </div>
+    </div>
+
+    <div class="flex items-start gap-3">
+      <div class="w-7 h-7 bg-orange-100 rounded-full flex items-center justify-center shrink-0 text-orange-600 font-bold text-xs">2</div>
+      <div>
+        <p class="font-semibold text-gray-800 text-sm">承認 or 見送りの連絡が届く</p>
+        <p class="text-xs text-gray-500 mt-0.5">締め切りまでに結果がメールで届きます。</p>
+      </div>
+    </div>
+
+    <div class="flex items-start gap-3">
+      <div class="w-7 h-7 bg-orange-100 rounded-full flex items-center justify-center shrink-0 text-orange-600 font-bold text-xs">3</div>
+      <div>
+        <p class="font-semibold text-gray-800 text-sm">承認されたらSNSで連絡</p>
+        <p class="text-xs text-gray-500 mt-0.5">当日の待ち合わせなど、SNSを通じて直接連絡を取り合ってください。</p>
+      </div>
+    </div>
+
+    <div class="flex items-start gap-3">
+      <div class="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center shrink-0 text-white font-bold text-xs">🎉</div>
+      <div>
+        <p class="font-semibold text-gray-800 text-sm">当日、一緒に参加！</p>
+        <p class="text-xs text-gray-500 mt-0.5">一緒に地域へ飛び込みましょう！</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 注意 -->
+<div class="bg-amber-50 rounded-xl border border-amber-100 p-4 mb-6">
+  <p class="text-xs text-amber-700 leading-relaxed">
+    締め切りを過ぎると、一緒に行けなかった人には自動で通知が届きます。
+    また別の旗を探してみてください！
+  </p>
+</div>
+
+<!-- アクション -->
+<div class="grid grid-cols-1 gap-3">
+  <a href="/find/step1"
+     class="block text-center bg-orange-500 text-white font-bold py-4 rounded-2xl hover:bg-orange-600 transition-colors">
+    他の旗を探す
+  </a>
+  <a href="/"
+     class="block text-center text-gray-400 py-3 text-sm hover:text-gray-600 transition-colors">
+    トップに戻る
+  </a>
+</div>
+
+{% endblock %}

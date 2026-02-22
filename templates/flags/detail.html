@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}{{ flag.nickname }} さんの旗｜{{ event.title }}{% endblock %}
+
+{% block content %}
+
+<!-- イベント情報 -->
+<div class="bg-white rounded-2xl border border-gray-100 p-5 mb-4">
+  <p class="text-xs text-gray-400 mb-1">{{ event.category }}</p>
+  <h1 class="text-xl font-bold text-gray-900 mb-1">{{ event.title }}</h1>
+  <p class="text-sm text-gray-500 leading-relaxed mb-3">{{ event.description }}</p>
+  <div class="flex flex-wrap gap-2 text-xs text-gray-500">
+    <span>📅 {{ event.event_date }}</span>
+    <span>📍 {{ event.location }}</span>
+  </div>
+</div>
+
+<!-- 旗を立てた人の情報 -->
+<div class="bg-orange-50 rounded-2xl border border-orange-100 p-5 mb-4">
+  <div class="flex items-center gap-3 mb-4">
+    <div class="w-10 h-10 bg-orange-200 rounded-full flex items-center justify-center text-lg font-bold text-orange-700">
+      {{ flag.nickname[0] }}
+    </div>
+    <div>
+      <p class="font-bold text-gray-900">{{ flag.nickname }}</p>
+      <div class="flex gap-2 mt-0.5">
+        <span class="text-xs bg-white text-orange-600 border border-orange-200 px-2 py-0.5 rounded-full">{{ flag.anxiety_level }}</span>
+        <span class="text-xs bg-white text-orange-600 border border-orange-200 px-2 py-0.5 rounded-full">{{ flag.vibe }}</span>
+      </div>
+      {% if flag.sns_account %}
+      <div class="flex items-center gap-1.5 mt-1.5">
+        <span class="text-xs text-gray-400">{{ flag.sns_type }}</span>
+        <span class="text-xs font-medium text-gray-700">{{ flag.sns_account }}</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="mb-1">
+    <p class="text-xs text-orange-600 font-semibold mb-1">行きたい理由・気持ち</p>
+    <p class="text-sm text-gray-800 leading-relaxed">{{ flag.reason }}</p>
+  </div>
+</div>
+
+<!-- 旗の詳細条件 -->
+<div class="bg-white rounded-2xl border border-gray-100 p-5 mb-4">
+  <h2 class="font-bold text-gray-700 text-sm mb-3">一緒に行きたい人の条件</h2>
+  <div class="grid grid-cols-2 gap-3 text-sm">
+    <div class="bg-gray-50 rounded-xl p-3">
+      <p class="text-xs text-gray-400 mb-0.5">人数</p>
+      <p class="font-semibold text-gray-800">{{ flag.group_size }}</p>
+    </div>
+    <div class="bg-gray-50 rounded-xl p-3">
+      <p class="text-xs text-gray-400 mb-0.5">性別</p>
+      <p class="font-semibold text-gray-800">{{ flag.gender_pref }}</p>
+    </div>
+    <div class="bg-gray-50 rounded-xl p-3">
+      <p class="text-xs text-gray-400 mb-0.5">属性</p>
+      <p class="font-semibold text-gray-800">{{ flag.member_type }}</p>
+    </div>
+    <div class="bg-gray-50 rounded-xl p-3">
+      <p class="text-xs text-gray-400 mb-0.5">状態</p>
+      <p class="font-semibold text-green-700">{{ flag.status }}</p>
+    </div>
+  </div>
+
+  <div class="mt-3 pt-3 border-t border-gray-100 grid grid-cols-1 gap-2 text-sm">
+    <div class="flex items-center gap-2 text-gray-600">
+      <span>📍</span>
+      <span><span class="text-gray-400">集合場所：</span>{{ flag.meeting_place }}</span>
+    </div>
+    <div class="flex items-center gap-2 text-gray-600">
+      <span>🕐</span>
+      <span><span class="text-gray-400">集合日時：</span>{{ flag.meeting_time }}</span>
+    </div>
+    <div class="flex items-center gap-2 text-gray-600">
+      <span>⏰</span>
+      <span><span class="text-gray-400">締め切り：</span>{{ flag.deadline }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- 手を挙げるフォーム -->
+<div class="bg-white rounded-2xl border border-orange-100 p-5">
+  <h2 class="font-bold text-gray-900 mb-1">一緒に行きたい！</h2>
+  <p class="text-xs text-gray-500 mb-4">
+    手を挙げると {{ flag.nickname }} さんに通知が届きます。
+    OKになったらSNSで直接連絡を取り合ってください。
+  </p>
+
+  <form method="post" action="/flags/{{ flag.id }}/raise">
+    <div class="grid grid-cols-1 gap-4">
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">ニックネーム <span class="text-orange-500">*</span></label>
+        <input type="text" name="nickname" required placeholder="例：たろう"
+               class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">メールアドレス <span class="text-orange-500">*</span></label>
+        <input type="email" name="email" required placeholder="例：taro@example.com"
+               class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300" />
+        <p class="text-xs text-gray-400 mt-1">承認通知の送付先。旗を立てた人には表示されません。</p>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">ひとこと <span class="text-gray-400 font-normal">（任意）</span></label>
+        <textarea name="message" rows="3" placeholder="例：同じく不安だけど参加してみたいです！"
+                  class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 resize-none"></textarea>
+      </div>
+
+      <!-- SNSアカウント -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          SNSアカウント <span class="text-gray-400 font-normal">（任意）</span>
+        </label>
+        <div class="flex gap-2">
+          <select name="sns_type"
+                  class="border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 bg-white shrink-0">
+            <option value="">選択</option>
+            <option value="Twitter/X">Twitter/X</option>
+            <option value="Instagram">Instagram</option>
+            <option value="Facebook">Facebook</option>
+            <option value="その他">その他</option>
+          </select>
+          <input type="text" name="sns_account" placeholder="@ユーザー名 または URL"
+                 class="flex-1 min-w-0 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300" />
+        </div>
+        <p class="text-xs text-gray-400 mt-1">旗を立てた人だけに共有されます。安心してください。</p>
+      </div>
+
+    </div>
+
+    <button type="submit"
+            class="mt-5 w-full bg-orange-500 text-white font-bold py-4 rounded-2xl hover:bg-orange-600 transition-colors text-base">
+      手を挙げる 🙋
+    </button>
+  </form>
+</div>
+
+<div class="mt-4 flex items-center justify-between">
+  <a href="javascript:history.back()" class="text-sm text-gray-400 hover:text-orange-500 transition-colors">← 一覧へ戻る</a>
+  <a href="/flags/{{ flag.id }}/manage" class="text-xs text-gray-300 hover:text-gray-500 transition-colors">旗を立てた方はこちら</a>
+</div>
+
+{% endblock %}

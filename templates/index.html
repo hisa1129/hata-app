@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}旗アプリ — 気持ちの合う人と、地域へ{% endblock %}
+
+{% block content %}
+
+<!-- ヒーローセクション -->
+<div class="text-center py-10">
+  <div class="text-6xl mb-4">🚩</div>
+  <h1 class="text-3xl font-bold text-gray-900 mb-3">
+    気持ちの合う人と、<br>地域へ踏み出そう。
+  </h1>
+  <p class="text-gray-500 text-base leading-relaxed max-w-sm mx-auto">
+    行きたいイベントがあるけど、一人では不安。<br>
+    同じ気持ちの仲間を見つけて、一緒に参加しよう。
+  </p>
+</div>
+
+<!-- メインアクション -->
+<div class="grid grid-cols-1 gap-4 mt-4">
+
+  <!-- 旗を探す -->
+  <a href="/find/step1"
+     class="block bg-white rounded-2xl shadow-sm border border-orange-100 p-6 hover:shadow-md hover:border-orange-300 transition-all group">
+    <div class="flex items-start gap-4">
+      <div class="text-4xl">👀</div>
+      <div class="flex-1">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold text-gray-900 group-hover:text-orange-600 transition-colors">旗を探す</h2>
+          <span class="text-orange-400 text-xl">→</span>
+        </div>
+        <p class="text-sm text-gray-500 mt-1 leading-relaxed">
+          参加したいイベントの旗を見つけて、<br>手を挙げてみよう。
+        </p>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <span class="text-xs bg-orange-50 text-orange-600 px-2 py-1 rounded-full">ボランティア</span>
+          <span class="text-xs bg-orange-50 text-orange-600 px-2 py-1 rounded-full">祭り・地域行事</span>
+          <span class="text-xs bg-orange-50 text-orange-600 px-2 py-1 rounded-full">ワークショップ</span>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <!-- 旗を立てる -->
+  <a href="/create/step1"
+     class="block bg-orange-500 rounded-2xl shadow-sm p-6 hover:bg-orange-600 transition-all group">
+    <div class="flex items-start gap-4">
+      <div class="text-4xl">🚩</div>
+      <div class="flex-1">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold text-white">旗を立てる</h2>
+          <span class="text-orange-200 text-xl">→</span>
+        </div>
+        <p class="text-sm text-orange-100 mt-1 leading-relaxed">
+          行きたいイベントに旗を立てて、<br>一緒に行ける仲間を募ろう。
+        </p>
+        <div class="mt-3">
+          <span class="text-xs bg-white bg-opacity-20 text-white px-2 py-1 rounded-full">気持ちのマッチング</span>
+        </div>
+      </div>
+    </div>
+  </a>
+
+</div>
+
+<!-- 安心の仕組み説明 -->
+<div class="mt-10">
+  <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">安心して踏み出せる3つの理由</h3>
+  <div class="grid grid-cols-1 gap-3">
+    <div class="bg-white rounded-xl p-4 flex items-start gap-3 border border-gray-100">
+      <span class="text-2xl">🤝</span>
+      <div>
+        <p class="font-semibold text-sm text-gray-800">気持ちで繋がる</p>
+        <p class="text-xs text-gray-500 mt-0.5">「なぜ行きたいか」の理由でマッチング。スペックじゃなく、フィーリング重視。</p>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl p-4 flex items-start gap-3 border border-gray-100">
+      <span class="text-2xl">🔒</span>
+      <div>
+        <p class="font-semibold text-sm text-gray-800">安心を積み重ねる</p>
+        <p class="text-xs text-gray-500 mt-0.5">参加履歴や相互評価で、「この人となら安心」が見えてくる。</p>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl p-4 flex items-start gap-3 border border-gray-100">
+      <span class="text-2xl">✨</span>
+      <div>
+        <p class="font-semibold text-sm text-gray-800">3人以上の選択肢</p>
+        <p class="text-xs text-gray-500 mt-0.5">2人きりが不安な人のために、3人以上のグループでも参加できる。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

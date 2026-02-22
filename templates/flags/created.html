@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}旗を立てました！{% endblock %}
+
+{% block content %}
+
+<div class="text-center py-8">
+  <!-- 成功アイコン -->
+  <div class="text-7xl mb-4">🚩</div>
+  <h1 class="text-2xl font-bold text-gray-900 mb-3">旗を立てました！</h1>
+  <p class="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto">
+    一緒に行きたい人から「手が挙がった」通知が届いたら、
+    その人と一緒に行くかどうか決めてください。
+  </p>
+</div>
+
+<!-- 次のステップ -->
+<div class="bg-white rounded-2xl border border-gray-100 p-5 mb-6">
+  <h2 class="font-bold text-gray-800 mb-4 text-sm">これからの流れ</h2>
+  <div class="space-y-4">
+
+    <div class="flex items-start gap-3">
+      <div class="w-7 h-7 bg-orange-100 rounded-full flex items-center justify-center shrink-0 text-orange-600 font-bold text-xs">1</div>
+      <div>
+        <p class="font-semibold text-gray-800 text-sm">手が挙がったら通知が届く</p>
+        <p class="text-xs text-gray-500 mt-0.5">参加希望者が現れたらメールでお知らせします。</p>
+      </div>
+    </div>
+
+    <div class="flex items-start gap-3">
+      <div class="w-7 h-7 bg-orange-100 rounded-full flex items-center justify-center shrink-0 text-orange-600 font-bold text-xs">2</div>
+      <div>
+        <p class="font-semibold text-gray-800 text-sm">一緒に行くか決める</p>
+        <p class="text-xs text-gray-500 mt-0.5">プロフィールを見て、一緒に行くか決めてください。</p>
+      </div>
+    </div>
+
+    <div class="flex items-start gap-3">
+      <div class="w-7 h-7 bg-orange-100 rounded-full flex items-center justify-center shrink-0 text-orange-600 font-bold text-xs">3</div>
+      <div>
+        <p class="font-semibold text-gray-800 text-sm">締め切りで確定</p>
+        <p class="text-xs text-gray-500 mt-0.5">締め切りが来たら参加メンバーが確定します。SNSで連絡を取り合ってください。</p>
+      </div>
+    </div>
+
+    <div class="flex items-start gap-3">
+      <div class="w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center shrink-0 text-white font-bold text-xs">🎉</div>
+      <div>
+        <p class="font-semibold text-gray-800 text-sm">当日、一緒に参加！</p>
+        <p class="text-xs text-gray-500 mt-0.5">楽しんできてください！</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- アクション -->
+<div class="grid grid-cols-1 gap-3">
+  <a href="/find/step1"
+     class="block text-center bg-white text-orange-600 font-bold py-4 rounded-2xl border-2 border-orange-200 hover:border-orange-400 transition-colors">
+    他の旗を探す
+  </a>
+  <a href="/"
+     class="block text-center text-gray-400 py-3 text-sm hover:text-gray-600 transition-colors">
+    トップに戻る
+  </a>
+</div>
+
+{% endblock %}

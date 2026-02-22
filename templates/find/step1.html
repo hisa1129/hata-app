@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}旗を探す｜あなたの気持ちは？{% endblock %}
+
+{% block content %}
+
+<!-- ステップ表示 -->
+<div class="flex items-center gap-2 mb-6 text-xs text-gray-400">
+  <span class="bg-orange-500 text-white rounded-full w-5 h-5 flex items-center justify-center font-bold text-xs">1</span>
+  <span class="text-orange-500 font-medium">気持ちを選ぶ</span>
+  <span class="text-gray-300">›</span>
+  <span class="text-gray-400">種類と温度感</span>
+  <span class="text-gray-300">›</span>
+  <span class="text-gray-400">旗一覧</span>
+</div>
+
+<h1 class="text-2xl font-bold text-gray-900 mb-2">あなたの今の<br>気持ちはどちら？</h1>
+<p class="text-sm text-gray-500 mb-8">
+  気持ちに近い旗を探します。正直に選んでください。
+</p>
+
+<form method="post" action="/find/step2">
+  <div class="grid grid-cols-1 gap-4">
+
+    <!-- 初めてで不安 -->
+    <label class="block cursor-pointer">
+      <input type="radio" name="anxiety_level" value="初めてで不安" class="sr-only peer" />
+      <div class="bg-white rounded-2xl border-2 border-gray-100 p-5 peer-checked:border-orange-400 peer-checked:bg-orange-50 hover:border-orange-200 transition-all">
+        <div class="flex items-start gap-4">
+          <div class="text-4xl">😟</div>
+          <div>
+            <p class="font-bold text-gray-900 text-lg">初めてで不安</p>
+            <p class="text-sm text-gray-500 mt-1 leading-relaxed">
+              地域のイベントに行ってみたいけど、<br>
+              知らない人ばかりで緊張しそう…
+            </p>
+          </div>
+        </div>
+      </div>
+    </label>
+
+    <!-- 慣れている -->
+    <label class="block cursor-pointer">
+      <input type="radio" name="anxiety_level" value="慣れている" class="sr-only peer" />
+      <div class="bg-white rounded-2xl border-2 border-gray-100 p-5 peer-checked:border-orange-400 peer-checked:bg-orange-50 hover:border-orange-200 transition-all">
+        <div class="flex items-start gap-4">
+          <div class="text-4xl">😊</div>
+          <div>
+            <p class="font-bold text-gray-900 text-lg">慣れている</p>
+            <p class="text-sm text-gray-500 mt-1 leading-relaxed">
+              地域のイベントや新しい場所は<br>
+              そんなに緊張しない。仲間を探したい。
+            </p>
+          </div>
+        </div>
+      </div>
+    </label>
+
+  </div>
+
+  <button type="submit"
+          class="mt-8 w-full bg-orange-500 text-white font-bold py-4 rounded-2xl hover:bg-orange-600 transition-colors text-base">
+    次へ →
+  </button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}旗アプリ{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            hata: {
+              50:  '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              300: '#fdba74',
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-orange-50 min-h-screen flex flex-col text-gray-800">
+
+  <!-- ヘッダー -->
+  <header class="bg-white border-b border-orange-100 shadow-sm">
+    <div class="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2 text-orange-500 font-bold text-lg">
+        <span class="text-2xl">🚩</span>
+        <span>旗アプリ</span>
+      </a>
+      <nav class="flex gap-3 text-sm font-medium">
+        <a href="/find/step1" class="text-gray-600 hover:text-orange-500 transition-colors">旗を探す</a>
+        <a href="/create/step1" class="bg-orange-500 text-white px-3 py-1.5 rounded-full hover:bg-orange-600 transition-colors">旗を立てる</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- メインコンテンツ -->
+  <main class="flex-1 max-w-2xl w-full mx-auto px-4 py-8">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- フッター -->
+  <footer class="bg-white border-t border-orange-100 py-4 text-center text-xs text-gray-400">
+    <p>旗アプリ — 気持ちの合う人と、地域へ踏み出そう</p>
+  </footer>
+
+</body>
+</html>

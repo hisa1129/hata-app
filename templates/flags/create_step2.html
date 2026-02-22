@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block title %}旗を立てる｜気持ちを入力{% endblock %}
+
+{% block content %}
+
+<!-- ステップ表示 -->
+<div class="flex items-center gap-1.5 mb-6 text-xs overflow-x-auto pb-1">
+  <span class="bg-orange-200 text-orange-600 rounded-full w-5 h-5 flex items-center justify-center font-bold shrink-0">1</span>
+  <span class="text-gray-400 shrink-0">イベント選択</span>
+  <span class="text-gray-300">›</span>
+  <span class="bg-orange-500 text-white rounded-full w-5 h-5 flex items-center justify-center font-bold shrink-0">2</span>
+  <span class="text-orange-500 font-medium shrink-0">気持ち入力</span>
+  <span class="text-gray-300">›</span>
+  <span class="text-gray-400 shrink-0">条件を選ぶ</span>
+  <span class="text-gray-300">›</span>
+  <span class="text-gray-400 shrink-0">集合情報</span>
+  <span class="text-gray-300">›</span>
+  <span class="text-gray-400 shrink-0">確認</span>
+</div>
+
+<!-- 選択したイベント -->
+<div class="bg-orange-50 rounded-xl border border-orange-100 p-3 mb-6 flex items-center gap-3">
+  <span class="text-xl">
+    {% if event.category == "ボランティア" %}🌱
+    {% elif event.category == "祭り・地域行事" %}🎆
+    {% else %}🛠️
+    {% endif %}
+  </span>
+  <div>
+    <p class="text-xs text-orange-500 font-medium">選択中のイベント</p>
+    <p class="font-bold text-gray-800 text-sm">{{ event.title }}</p>
+  </div>
+</div>
+
+<h1 class="text-2xl font-bold text-gray-900 mb-2">あなたの気持ちを<br>教えてください</h1>
+<p class="text-sm text-gray-500 mb-6">
+  ここが一番大切な部分です。正直な気持ちを書くと、気の合う人が見つかりやすくなります。
+</p>
+
+<form method="post" action="/create/step3">
+  <input type="hidden" name="event_id" value="{{ event_id }}" />
+
+  <div class="grid grid-cols-1 gap-6">
+
+    <!-- ニックネーム -->
+    <div>
+      <label class="block text-sm font-semibold text-gray-700 mb-1">
+        ニックネーム <span class="text-orange-500">*</span>
+      </label>
+      <input type="text" name="nickname" required placeholder="例：はるか"
+             class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300" />
+      <p class="text-xs text-gray-400 mt-1">旗一覧に表示される名前です。</p>
+    </div>
+
+    <!-- 不安度 -->
+    <div>
+      <label class="block text-sm font-semibold text-gray-700 mb-2">
+        不安度 <span class="text-orange-500">*</span>
+      </label>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="block cursor-pointer">
+          <input type="radio" name="anxiety_level" value="初めてで不安" class="sr-only peer" />
+          <div class="bg-white rounded-xl border-2 border-gray-100 p-3 peer-checked:border-orange-400 peer-checked:bg-orange-50 hover:border-orange-200 transition-all text-center">
+            <div class="text-2xl mb-1">😟</div>
+            <p class="text-xs font-semibold text-gray-800">初めてで不安</p>
+          </div>
+        </label>
+        <label class="block cursor-pointer">
+          <input type="radio" name="anxiety_level" value="慣れている" class="sr-only peer" />
+          <div class="bg-white rounded-xl border-2 border-gray-100 p-3 peer-checked:border-orange-400 peer-checked:bg-orange-50 hover:border-orange-200 transition-all text-center">
+            <div class="text-2xl mb-1">😊</div>
+            <p class="text-xs font-semibold text-gray-800">慣れている</p>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- 温度感 -->
+    <div>
+      <label class="block text-sm font-semibold text-gray-700 mb-2">
+        参加したい雰囲気 <span class="text-orange-500">*</span>
+      </label>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="block cursor-pointer">
+          <input type="radio" name="vibe" value="落ち着いて参加したい" class="sr-only peer" />
+          <div class="bg-white rounded-xl border-2 border-gray-100 p-3 peer-checked:border-orange-400 peer-checked:bg-orange-50 hover:border-orange-200 transition-all text-center">
+            <div class="text-2xl mb-1">☕</div>
+            <p class="text-xs font-semibold text-gray-800">落ち着いて</p>
+          </div>
+        </label>
+        <label class="block cursor-pointer">
+          <input type="radio" name="vibe" value="ワイワイ参加したい" class="sr-only peer" />
+          <div class="bg-white rounded-xl border-2 border-gray-100 p-3 peer-checked:border-orange-400 peer-checked:bg-orange-50 hover:border-orange-200 transition-all text-center">
+            <div class="text-2xl mb-1">🎉</div>
+            <p class="text-xs font-semibold text-gray-800">ワイワイ</p>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- 行きたい理由 -->
+    <div>
+      <label class="block text-sm font-semibold text-gray-700 mb-1">
+        行きたい理由・気持ち <span class="text-orange-500">*</span>
+      </label>
+      <textarea name="reason" rows="5" required
+                placeholder="例：地域の人と繋がりたいと思っているけど、一人だと緊張してしまう。同じ気持ちの人と一緒に参加できたら嬉しいです！"
+                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 resize-none leading-relaxed"></textarea>
+      <p class="text-xs text-gray-400 mt-1">ここが一番大切！正直に書くと気の合う人が見つかります。</p>
+    </div>
+
+    <!-- SNSアカウント -->
+    <div>
+      <label class="block text-sm font-semibold text-gray-700 mb-1">
+        SNSアカウント <span class="text-gray-400 font-normal">（任意）</span>
+      </label>
+      <div class="flex gap-2">
+        <select name="sns_type"
+                class="border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 bg-white shrink-0">
+          <option value="">選択</option>
+          <option value="Twitter/X">Twitter/X</option>
+          <option value="Instagram">Instagram</option>
+          <option value="その他">その他</option>
+        </select>
+        <input type="text" name="sns_account" placeholder="@ユーザー名 または URL"
+               class="flex-1 min-w-0 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300" />
+      </div>
+      <p class="text-xs text-gray-400 mt-1">旗の詳細ページに表示されます。手を挙げた人があなたのことを知るために使われます。</p>
+    </div>
+
+  </div>
+
+  <button type="submit"
+          class="mt-8 w-full bg-orange-500 text-white font-bold py-4 rounded-2xl hover:bg-orange-600 transition-colors text-base">
+    次へ →
+  </button>
+</form>
+
+{% endblock %}

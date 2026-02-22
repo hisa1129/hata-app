@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}旗を立てる｜確認{% endblock %}
+
+{% block content %}
+
+<!-- ステップ表示 -->
+<div class="flex items-center gap-1.5 mb-6 text-xs overflow-x-auto pb-1">
+  <span class="bg-orange-200 text-orange-600 rounded-full w-5 h-5 flex items-center justify-center font-bold shrink-0">1</span>
+  <span class="text-gray-400 shrink-0">選択</span>
+  <span class="text-gray-300">›</span>
+  <span class="bg-orange-200 text-orange-600 rounded-full w-5 h-5 flex items-center justify-center font-bold shrink-0">2</span>
+  <span class="text-gray-400 shrink-0">気持ち</span>
+  <span class="text-gray-300">›</span>
+  <span class="bg-orange-200 text-orange-600 rounded-full w-5 h-5 flex items-center justify-center font-bold shrink-0">3</span>
+  <span class="text-gray-400 shrink-0">条件</span>
+  <span class="text-gray-300">›</span>
+  <span class="bg-orange-200 text-orange-600 rounded-full w-5 h-5 flex items-center justify-center font-bold shrink-0">4</span>
+  <span class="text-gray-400 shrink-0">集合情報</span>
+  <span class="text-gray-300">›</span>
+  <span class="bg-orange-500 text-white rounded-full w-5 h-5 flex items-center justify-center font-bold shrink-0">5</span>
+  <span class="text-orange-500 font-medium shrink-0">確認</span>
+</div>
+
+<h1 class="text-2xl font-bold text-gray-900 mb-2">内容を確認してください</h1>
+<p class="text-sm text-gray-500 mb-6">この内容で旗を立てます。よければ「投稿する」を押してください。</p>
+
+<!-- イベント情報 -->
+<div class="bg-white rounded-2xl border border-gray-100 p-5 mb-4">
+  <p class="text-xs text-gray-400 font-medium uppercase tracking-wider mb-3">イベント</p>
+  <div class="flex items-center gap-3">
+    <span class="text-2xl">
+      {% if event.category == "ボランティア" %}🌱
+      {% elif event.category == "祭り・地域行事" %}🎆
+      {% else %}🛠️
+      {% endif %}
+    </span>
+    <div>
+      <p class="font-bold text-gray-900">{{ event.title }}</p>
+      <p class="text-xs text-gray-500">{{ event.event_date }} ・ {{ event.location }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- 旗の情報 -->
+<div class="bg-white rounded-2xl border border-gray-100 p-5 mb-4">
+  <p class="text-xs text-gray-400 font-medium uppercase tracking-wider mb-3">旗の内容</p>
+
+  <div class="space-y-3">
+    <div class="flex gap-2">
+      <span class="text-xs text-gray-400 w-24 shrink-0 pt-0.5">ニックネーム</span>
+      <span class="text-sm font-semibold text-gray-800">{{ nickname }}</span>
+    </div>
+    <div class="flex gap-2">
+      <span class="text-xs text-gray-400 w-24 shrink-0 pt-0.5">不安度</span>
+      <span class="text-sm text-gray-800">{{ anxiety_level }}</span>
+    </div>
+    <div class="flex gap-2">
+      <span class="text-xs text-gray-400 w-24 shrink-0 pt-0.5">温度感</span>
+      <span class="text-sm text-gray-800">{{ vibe }}</span>
+    </div>
+    <div class="flex gap-2">
+      <span class="text-xs text-gray-400 w-24 shrink-0 pt-0.5">行きたい理由</span>
+      <span class="text-sm text-gray-800 leading-relaxed">{{ reason }}</span>
+    </div>
+    {% if sns_account %}
+    <div class="flex gap-2">
+      <span class="text-xs text-gray-400 w-24 shrink-0 pt-0.5">SNS</span>
+      <span class="text-sm text-gray-800">{{ sns_type }} {{ sns_account }}</span>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- 条件 -->
+<div class="bg-white rounded-2xl border border-gray-100 p-5 mb-4">
+  <p class="text-xs text-gray-400 font-medium uppercase tracking-wider mb-3">一緒に行く人の条件</p>
+  <div class="flex flex-wrap gap-2">
+    <span class="text-sm bg-orange-50 text-orange-700 px-3 py-1 rounded-full border border-orange-100">{{ group_size }}</span>
+    <span class="text-sm bg-orange-50 text-orange-700 px-3 py-1 rounded-full border border-orange-100">{{ gender_pref }}</span>
+    <span class="text-sm bg-orange-50 text-orange-700 px-3 py-1 rounded-full border border-orange-100">{{ member_type }}</span>
+  </div>
+</div>
+
+<!-- 集合情報 -->
+<div class="bg-white rounded-2xl border border-gray-100 p-5 mb-6">
+  <p class="text-xs text-gray-400 font-medium uppercase tracking-wider mb-3">集合情報</p>
+  <div class="space-y-2 text-sm text-gray-700">
+    <div class="flex items-center gap-2">
+      <span>📍</span>
+      <span>{{ meeting_place }}</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span>🕐</span>
+      <span>{{ meeting_time }}</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span>⏰</span>
+      <span>締め切り {{ deadline }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- 送信フォーム（全データを hidden で送る） -->
+<form method="post" action="/create/submit">
+  <input type="hidden" name="event_id" value="{{ event_id }}" />
+  <input type="hidden" name="nickname" value="{{ nickname }}" />
+  <input type="hidden" name="anxiety_level" value="{{ anxiety_level }}" />
+  <input type="hidden" name="vibe" value="{{ vibe }}" />
+  <input type="hidden" name="reason" value="{{ reason }}" />
+  <input type="hidden" name="group_size" value="{{ group_size }}" />
+  <input type="hidden" name="gender_pref" value="{{ gender_pref }}" />
+  <input type="hidden" name="member_type" value="{{ member_type }}" />
+  <input type="hidden" name="meeting_place" value="{{ meeting_place }}" />
+  <input type="hidden" name="meeting_time" value="{{ meeting_time }}" />
+  <input type="hidden" name="deadline" value="{{ deadline }}" />
+  <input type="hidden" name="sns_type" value="{{ sns_type }}" />
+  <input type="hidden" name="sns_account" value="{{ sns_account }}" />
+
+  <div class="grid grid-cols-2 gap-3">
+    <a href="javascript:history.back()"
+       class="block text-center bg-gray-100 text-gray-700 font-bold py-4 rounded-2xl hover:bg-gray-200 transition-colors text-sm">
+      ← 修正する
+    </a>
+    <button type="submit"
+            class="bg-orange-500 text-white font-bold py-4 rounded-2xl hover:bg-orange-600 transition-colors text-base">
+      投稿する 🚩
+    </button>
+  </div>
+</form>
+
+{% endblock %}
