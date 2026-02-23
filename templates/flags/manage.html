@@ -5,13 +5,13 @@
 
 <!-- ヘッダー -->
 <div class="mb-6">
-  <p class="text-xs text-orange-500 font-medium mb-1">旗の管理ページ</p>
+  <p class="text-xs text-green-600 font-medium mb-1">旗の管理ページ</p>
   <h1 class="text-xl font-bold text-gray-900">手を挙げてくれた人</h1>
   <p class="text-xs text-gray-400 mt-1">このページはあなた（旗を立てた人）だけが確認するページです。</p>
 </div>
 
 <!-- 旗のサマリー -->
-<div class="bg-orange-50 rounded-xl border border-orange-100 p-4 mb-6 flex items-center gap-3">
+<div class="bg-green-50 rounded-xl border border-green-100 p-4 mb-6 flex items-center gap-3">
   <span class="text-xl">
     {% if event.category == "ボランティア" %}🌱
     {% elif event.category == "祭り・地域行事" %}🎆
@@ -70,7 +70,7 @@
       <div class="grid grid-cols-2 gap-2">
         <button type="button"
                 onclick="alert('モック：承認しました（メールは送信されません）')"
-                class="bg-orange-500 text-white text-sm font-bold py-2.5 rounded-xl hover:bg-orange-600 transition-colors">
+                class="bg-green-600 text-white text-sm font-bold py-2.5 rounded-xl hover:bg-green-700 transition-colors">
           一緒に行く ✓
         </button>
         <button type="button"
@@ -107,7 +107,7 @@
 </div>
 
 <div class="mt-4 text-center">
-  <a href="/flags/{{ flag.id }}" class="text-sm text-gray-400 hover:text-orange-500 transition-colors">← 旗の詳細に戻る</a>
+  <a href="/flags/{{ flag.id }}" class="text-sm text-gray-400 hover:text-green-600 transition-colors">← 旗の詳細に戻る</a>
 </div>
 
 {% endblock %}
