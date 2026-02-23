@@ -70,6 +70,23 @@ async def find_list(
 
 
 # ──────────────────────────────────────────
+# イベント詳細
+# ──────────────────────────────────────────
+
+@app.get("/events/{event_id}", response_class=HTMLResponse)
+async def event_detail(request: Request, event_id: str):
+    event = mock_data.get_event(event_id)
+    if not event:
+        return RedirectResponse("/", status_code=303)
+    flags = mock_data.get_flags_by_event(event_id)
+    return templates.TemplateResponse("events/detail.html", {
+        "request": request,
+        "event": event,
+        "flags": flags,
+    })
+
+
+# ──────────────────────────────────────────
 # 旗の詳細・手を挙げる
 # ──────────────────────────────────────────
 

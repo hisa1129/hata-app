@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block content %}
+
+<!-- イベント情報 -->
+<div class="bg-white rounded-2xl border border-gray-100 p-5 mb-6">
+  <div class="flex items-center gap-2 mb-3">
+    <span class="text-2xl">
+      {% if event.category == "ボランティア" %}🌱
+      {% elif event.category == "祭り・地域行事" %}🎆
+      {% else %}🛠️
+      {% endif %}
+    </span>
+    <span class="text-xs bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full font-medium">{{ event.category }}</span>
+  </div>
+
+  <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ event.title }}</h1>
+  <p class="text-sm text-gray-500 leading-relaxed mb-4">{{ event.description }}</p>
+
+  <div class="grid grid-cols-1 gap-2 text-sm">
+    <div class="flex items-center gap-2 text-gray-600">
+      <span class="text-base">📅</span>
+      <span><span class="text-gray-400">開催日：</span>{{ event.event_date }}</span>
+    </div>
+    <div class="flex items-center gap-2 text-gray-600">
+      <span class="text-base">📍</span>
+      <span><span class="text-gray-400">場所：</span>{{ event.location }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- このイベントに立っている旗 -->
+<div class="mb-2 flex items-center justify-between">
+  <h2 class="font-bold text-gray-800">このイベントの旗</h2>
+  <span class="text-xs text-gray-400">{{ flags | length }} 件</span>
+</div>
+
+{% if flags %}
+  <div class="grid grid-cols-1 gap-4">
+    {% for flag in flags %}
+    <a href="/flags/{{ flag.id }}"
+       class="block bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-md hover:border-orange-200 transition-all">
+
+      <!-- 旗を立てた人 -->
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-9 h-9 bg-orange-100 rounded-full flex items-center justify-center text-base font-bold text-orange-600 shrink-0">
+          {{ flag.nickname[0] }}
+        </div>
+        <div>
+          <p class="font-bold text-gray-900 text-sm">{{ flag.nickname }}</p>
+          <div class="flex gap-1.5 mt-0.5">
+            <span class="text-xs bg-orange-50 text-orange-600 border border-orange-100 px-2 py-0.5 rounded-full">{{ flag.anxiety_level }}</span>
+            <span class="text-xs bg-orange-50 text-orange-600 border border-orange-100 px-2 py-0.5 rounded-full">{{ flag.vibe }}</span>
+          </div>
+        </div>
+        <span class="ml-auto shrink-0 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">{{ flag.status }}</span>
+      </div>
+
+      <!-- 気持ち -->
+      <div class="bg-orange-50 rounded-xl p-3 mb-3">
+        <p class="text-xs text-orange-600 font-medium mb-1">行きたい理由</p>
+        <p class="text-sm text-gray-700 leading-relaxed line-clamp-2">{{ flag.reason }}</p>
+      </div>
+
+      <!-- メタ情報 -->
+      <div class="flex flex-wrap gap-2 text-xs text-gray-500">
+        <span class="bg-gray-100 px-2 py-1 rounded-full">{{ flag.group_size }}</span>
+        <span class="bg-gray-100 px-2 py-1 rounded-full">{{ flag.member_type }}</span>
+        <span class="bg-gray-100 px-2 py-1 rounded-full">締め切り {{ flag.deadline }}</span>
+      </div>
+
+      <div class="mt-3 text-right text-sm text-orange-500 font-medium">旗の詳細を見る →</div>
+    </a>
+    {% endfor %}
+  </div>
+
+{% else %}
+  <div class="bg-white rounded-2xl border border-gray-100 p-8 text-center">
+    <div class="text-4xl mb-3">🚩</div>
+    <p class="font-bold text-gray-700 mb-2">まだ旗がありません</p>
+    <p class="text-sm text-gray-500 leading-relaxed">
+      このイベントへの旗を最初に立ててみませんか？
+    </p>
+    <a href="/create/step1"
+       class="inline-block mt-5 bg-orange-500 text-white font-bold py-3 px-6 rounded-2xl hover:bg-orange-600 transition-colors text-sm">
+      旗を立てる →
+    </a>
+  </div>
+{% endif %}
+
+<div class="mt-6 text-center">
+  <a href="/" class="text-sm text-gray-400 hover:text-orange-500 transition-colors">← トップに戻る</a>
+</div>
+
+{% endblock %}

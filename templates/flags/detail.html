@@ -8,9 +8,15 @@
   <p class="text-xs text-gray-400 mb-1">{{ event.category }}</p>
   <h1 class="text-xl font-bold text-gray-900 mb-1">{{ event.title }}</h1>
   <p class="text-sm text-gray-500 leading-relaxed mb-3">{{ event.description }}</p>
-  <div class="flex flex-wrap gap-2 text-xs text-gray-500">
-    <span>📅 {{ event.event_date }}</span>
-    <span>📍 {{ event.location }}</span>
+  <div class="flex items-center justify-between">
+    <div class="flex flex-wrap gap-2 text-xs text-gray-500">
+      <span>📅 {{ event.event_date }}</span>
+      <span>📍 {{ event.location }}</span>
+    </div>
+    <a href="/events/{{ event.id }}"
+       class="shrink-0 text-xs text-orange-500 font-medium hover:text-orange-700 transition-colors">
+      このイベントを見る →
+    </a>
   </div>
 </div>
 

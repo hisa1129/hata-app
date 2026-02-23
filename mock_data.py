@@ -187,6 +187,10 @@ def get_all_active_flags():
     return [f for f in FLAGS if f["status"] == "募集中"]
 
 
+def get_flags_by_event(event_id: str):
+    return [f for f in FLAGS if f["event_id"] == event_id and f["status"] == "募集中"]
+
+
 # 手を挙げた人のモックデータ
 RAISED_HANDS = [
     {
