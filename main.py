@@ -4,6 +4,7 @@ from typing import Optional
 from dotenv import load_dotenv
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 import mock_data
@@ -18,6 +19,7 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY", "")
 USE_SUPABASE = bool(SUPABASE_URL and SUPABASE_KEY)
 
 app = FastAPI(title="旗アプリ")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
