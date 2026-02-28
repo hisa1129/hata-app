@@ -231,3 +231,44 @@ RAISED_HANDS = [
 
 def get_raised_hands(flag_id: str):
     return [r for r in RAISED_HANDS if r["flag_id"] == flag_id]
+
+
+# 自分が立てた旗のID（モック：ログインユーザーが立てた旗とみなす）
+MY_FLAG_IDS = ["flag-003", "flag-005"]
+
+
+def get_my_flags():
+    return [f for f in FLAGS if f["id"] in MY_FLAG_IDS]
+
+
+# 自分がエントリーした旗のモックデータ（ログインユーザーのエントリー履歴）
+MY_ENTRIES = [
+    {
+        "id": "my-entry-001",
+        "flag_id": "flag-001",
+        "status": "承認待ち",
+        "created_at": "2024-08-04",
+    },
+    {
+        "id": "my-entry-002",
+        "flag_id": "flag-004",
+        "status": "承認済み",
+        "created_at": "2024-08-13",
+    },
+    {
+        "id": "my-entry-003",
+        "flag_id": "flag-002",
+        "status": "棄却",
+        "created_at": "2024-08-06",
+    },
+]
+
+
+def get_my_entries():
+    result = []
+    for entry in MY_ENTRIES:
+        flag = get_flag(entry["flag_id"])
+        if flag:
+            event = get_event(flag["event_id"])
+            result.append({**entry, "flag": flag, "event": event})
+    return result

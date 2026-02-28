@@ -68,6 +68,12 @@
       <span class="text-sm text-gray-800">{{ sns_type }} {{ sns_account }}</span>
     </div>
     {% endif %}
+    {% if email %}
+    <div class="flex gap-2">
+      <span class="text-xs text-gray-400 w-24 shrink-0 pt-0.5">メール</span>
+      <span class="text-sm text-gray-800">{{ email }}</span>
+    </div>
+    {% endif %}
   </div>
 </div>
 
@@ -115,6 +121,7 @@
   <input type="hidden" name="deadline" value="{{ deadline }}" />
   <input type="hidden" name="sns_type" value="{{ sns_type }}" />
   <input type="hidden" name="sns_account" value="{{ sns_account }}" />
+  <input type="hidden" name="email" value="{{ email }}" />
 
   <div class="grid grid-cols-2 gap-3">
     <a href="javascript:history.back()"

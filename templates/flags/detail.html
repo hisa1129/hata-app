@@ -85,7 +85,16 @@
   </div>
 </div>
 
-<!-- 手を挙げるフォーム -->
+<!-- 手を挙げるフォーム or エントリー済みメッセージ -->
+{% if already_entered %}
+<div class="bg-amber-50 rounded-2xl border border-amber-200 p-5 text-center">
+  <div class="text-3xl mb-2">🙋</div>
+  <p class="font-bold text-amber-800 mb-1">このイベントは既にエントリー中です</p>
+  <p class="text-xs text-amber-700 leading-relaxed">
+    承認状況は<a href="/my/entries" class="underline hover:text-amber-900">マイエントリー</a>から確認できます。
+  </p>
+</div>
+{% else %}
 <div class="bg-white rounded-2xl border border-green-100 p-5">
   <h2 class="font-bold text-gray-900 mb-1">一緒に行きたい！</h2>
   <p class="text-xs text-gray-500 mb-4">
@@ -143,6 +152,7 @@
     </button>
   </form>
 </div>
+{% endif %}
 
 <div class="mt-4 flex items-center justify-between">
   <a href="javascript:history.back()" class="text-sm text-gray-400 hover:text-green-600 transition-colors">← 一覧へ戻る</a>

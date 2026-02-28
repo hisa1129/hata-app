@@ -37,8 +37,21 @@
         <span class="text-2xl">🚩</span>
         <span>旗アプリ</span>
       </a>
-      <nav class="flex gap-3 text-sm font-medium">
+      <nav class="flex gap-3 text-sm font-medium items-center">
         <a href="/find/step1" class="text-gray-600 hover:text-green-600 transition-colors">旗を探す</a>
+        <details class="relative">
+          <summary class="list-none cursor-pointer text-gray-600 hover:text-green-600 transition-colors flex items-center gap-0.5 select-none">
+            マイページ <span class="text-xs text-gray-400">▾</span>
+          </summary>
+          <div class="absolute right-0 top-full mt-1.5 bg-white border border-gray-100 rounded-xl shadow-lg py-1.5 z-20 min-w-max">
+            <a href="/my/flags" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors">
+              <span>🚩</span> マイ旗
+            </a>
+            <a href="/my/entries" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors">
+              <span>🙋</span> マイエントリー
+            </a>
+          </div>
+        </details>
         <a href="/create/step1" class="bg-green-600 text-white px-3 py-1.5 rounded-full hover:bg-green-700 transition-colors">旗を立てる</a>
       </nav>
     </div>

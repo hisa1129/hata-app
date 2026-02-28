@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}マイエントリー｜旗アプリ{% endblock %}
+
+{% block content %}
+
+<h1 class="text-2xl font-bold text-gray-900 mb-1">マイエントリー</h1>
+<p class="text-sm text-gray-500 mb-6">手を挙げた旗の一覧と承認状況です。</p>
+
+{% if entries %}
+  <div class="grid grid-cols-1 gap-4">
+    {% for entry in entries %}
+    <div class="bg-white rounded-2xl border border-gray-100 p-5">
+
+      <!-- イベント名 -->
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-base">
+          {% if entry.event.category == "ボランティア" %}🌱
+          {% elif entry.event.category == "祭り・地域行事" %}🎆
+          {% else %}🛠️
+          {% endif %}
+        </span>
+        <div>
+          <p class="text-xs text-gray-400">{{ entry.event.category }}</p>
+          <p class="font-bold text-gray-900 text-sm">{{ entry.event.title }}</p>
+        </div>
+        <!-- ステータスバッジ -->
+        {% if entry.status == "承認待ち" %}
+          <span class="ml-auto shrink-0 text-xs bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full font-medium">承認待ち</span>
+        {% elif entry.status == "承認済み" %}
+          <span class="ml-auto shrink-0 text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-full font-medium">承認済み</span>
+        {% else %}
+          <span class="ml-auto shrink-0 text-xs bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full font-medium">棄却</span>
+        {% endif %}
+      </div>
+
+      <!-- 旗を立てた人 -->
+      <div class="bg-gray-50 rounded-xl p-3 mb-3">
+        <p class="text-xs text-gray-400 mb-1">旗を立てた人</p>
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center text-xs font-bold text-green-700 shrink-0">
+            {{ entry.flag.nickname[0] }}
+          </div>
+          <p class="text-sm font-semibold text-gray-800">{{ entry.flag.nickname }}</p>
+          <span class="text-xs text-gray-400 ml-auto">{{ entry.event.event_date }}</span>
+        </div>
+      </div>
+
+      <!-- 承認済みの場合 -->
+      {% if entry.status == "承認済み" %}
+        <div class="bg-green-50 rounded-xl border border-green-100 p-3 mb-3">
+          <p class="text-xs text-green-700 leading-relaxed">
+            参加取りやめの場合はSNSまたはメールで旗を立てた方に直接ご連絡ください。
+          </p>
+        </div>
+      {% endif %}
+
+      <!-- 旗の詳細リンク + 取り下げボタン -->
+      <div class="flex items-center justify-between mt-2">
+        <a href="/flags/{{ entry.flag.id }}"
+           class="text-xs text-green-600 font-medium hover:text-green-800 transition-colors">
+          旗の詳細を見る →
+        </a>
+        {% if entry.status == "承認待ち" %}
+          <button type="button"
+                  class="text-xs text-red-500 border border-red-200 px-3 py-1.5 rounded-full hover:bg-red-50 transition-colors">
+            エントリーを取り下げる
+          </button>
+        {% endif %}
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+
+{% else %}
+  <div class="bg-white rounded-2xl border border-gray-100 p-8 text-center">
+    <div class="text-4xl mb-3">🙋</div>
+    <p class="font-bold text-gray-700 mb-2">まだエントリーがありません</p>
+    <p class="text-sm text-gray-500 leading-relaxed">気になる旗を見つけて手を挙げてみましょう。</p>
+    <a href="/find/step1"
+       class="inline-block mt-5 bg-green-600 text-white font-bold py-3 px-6 rounded-2xl hover:bg-green-700 transition-colors text-sm">
+      旗を探す →
+    </a>
+  </div>
+{% endif %}
+
+<div class="mt-6 text-center">
+  <a href="/" class="text-sm text-gray-400 hover:text-green-600 transition-colors">← トップに戻る</a>
+</div>
+
+{% endblock %}

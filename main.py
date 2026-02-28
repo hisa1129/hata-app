@@ -103,10 +103,17 @@ async def flag_detail(request: Request, flag_id: str):
     if not flag:
         return RedirectResponse("/find/step1", status_code=303)
     event = mock_data.get_event(flag["event_id"])
+    # 同じイベントに既にエントリー済みか確認（棄却を除く）
+    my_entries = mock_data.get_my_entries()
+    already_entered = any(
+        e["flag"]["event_id"] == flag["event_id"] and e["status"] != "棄却"
+        for e in my_entries
+    )
     return templates.TemplateResponse("flags/detail.html", {
         "request": request,
         "flag": flag,
         "event": event,
+        "already_entered": already_entered,
     })
 
 
@@ -174,6 +181,7 @@ async def create_step3(
     reason: str = Form(...),
     sns_type: Optional[str] = Form(None),
     sns_account: Optional[str] = Form(None),
+    email: Optional[str] = Form(None),
 ):
     event = mock_data.get_event(event_id)
     return templates.TemplateResponse("flags/create_step3.html", {
@@ -186,6 +194,7 @@ async def create_step3(
         "reason": reason,
         "sns_type": sns_type or "",
         "sns_account": sns_account or "",
+        "email": email or "",
     })
 
 
@@ -202,6 +211,7 @@ async def create_step4(
     member_type: str = Form(...),
     sns_type: Optional[str] = Form(None),
     sns_account: Optional[str] = Form(None),
+    email: Optional[str] = Form(None),
 ):
     event = mock_data.get_event(event_id)
     return templates.TemplateResponse("flags/create_step4.html", {
@@ -217,6 +227,7 @@ async def create_step4(
         "member_type": member_type,
         "sns_type": sns_type or "",
         "sns_account": sns_account or "",
+        "email": email or "",
     })
 
 
@@ -237,6 +248,7 @@ async def create_confirm(
     deadline: str = Form(...),
     sns_type: Optional[str] = Form(None),
     sns_account: Optional[str] = Form(None),
+    email: Optional[str] = Form(None),
 ):
     meeting_time = f"{meeting_date} {meeting_time_only}"
     event = mock_data.get_event(event_id)
@@ -256,6 +268,7 @@ async def create_confirm(
         "deadline": deadline,
         "sns_type": sns_type or "",
         "sns_account": sns_account or "",
+        "email": email or "",
     })
 
 
@@ -275,6 +288,7 @@ async def create_submit(
     deadline: str = Form(...),
     sns_type: Optional[str] = Form(None),
     sns_account: Optional[str] = Form(None),
+    email: Optional[str] = Form(None),
 ):
     # モック：DBへの保存は行わず完了ページへリダイレクト
     return RedirectResponse("/create/done", status_code=303)
@@ -283,3 +297,29 @@ async def create_submit(
 @app.get("/create/done", response_class=HTMLResponse)
 async def create_done(request: Request):
     return templates.TemplateResponse("flags/created.html", {"request": request})
+
+
+# ──────────────────────────────────────────
+# マイエントリー
+# ──────────────────────────────────────────
+
+@app.get("/my/flags", response_class=HTMLResponse)
+async def my_flags(request: Request):
+    flags = mock_data.get_my_flags()
+    events = {e["id"]: e for e in mock_data.EVENTS}
+    raised_counts = {f["id"]: len(mock_data.get_raised_hands(f["id"])) for f in flags}
+    return templates.TemplateResponse("my/flags.html", {
+        "request": request,
+        "flags": flags,
+        "events": events,
+        "raised_counts": raised_counts,
+    })
+
+
+@app.get("/my/entries", response_class=HTMLResponse)
+async def my_entries(request: Request):
+    entries = mock_data.get_my_entries()
+    return templates.TemplateResponse("my/entries.html", {
+        "request": request,
+        "entries": entries,
+    })
