@@ -124,6 +124,22 @@ async def event_detail(request: Request, event_id: str):
 
 
 # ──────────────────────────────────────────
+# 全旗一覧（絞り込みなし）
+# ──────────────────────────────────────────
+
+@app.get("/flags/all", response_class=HTMLResponse)
+async def flags_all(request: Request):
+    flags = database.get_all_flags()
+    all_events = database.get_all_events()
+    events = {e["id"]: e for e in all_events}
+    return templates.TemplateResponse("flags/all.html", {
+        "request": request,
+        "flags": flags,
+        "events": events,
+    })
+
+
+# ──────────────────────────────────────────
 # 旗の詳細・手を挙げる
 # ──────────────────────────────────────────
 
