@@ -1,12 +1,15 @@
 import os
+import secrets
 from typing import Optional
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, Form, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi import Depends, FastAPI, Form, HTTPException, Request, status
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+import database
 import mock_data
 
 load_dotenv()
@@ -21,6 +24,37 @@ USE_SUPABASE = bool(SUPABASE_URL and SUPABASE_KEY)
 app = FastAPI(title="旗アプリ")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
+
+
+# ── HTTPException のレスポンスに charset=utf-8 を明示 ──────────
+# デフォルトの application/json は charset 未指定のため、
+# ブラウザが Shift-JIS として誤検出するケースを防ぐ
+@app.exception_handler(HTTPException)
+async def _http_exception_handler(request: Request, exc: HTTPException):
+    headers = dict(exc.headers or {})
+    headers["Content-Type"] = "application/json; charset=utf-8"
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
+        headers=headers,
+    )
+
+
+# ── 管理者認証 ──────────────────────────────────────────────
+_http_basic = HTTPBasic()
+
+
+def verify_admin(credentials: HTTPBasicCredentials = Depends(_http_basic)):
+    admin_password = os.getenv("ADMIN_PASSWORD", "admin")
+    ok = secrets.compare_digest(
+        credentials.password.encode(), admin_password.encode()
+    )
+    if not ok:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized",
+            headers={"WWW-Authenticate": "Basic"},
+        )
 
 
 # ──────────────────────────────────────────
@@ -323,3 +357,123 @@ async def my_entries(request: Request):
         "request": request,
         "entries": entries,
     })
+
+
+# ──────────────────────────────────────────
+# 管理画面：イベント管理
+# ──────────────────────────────────────────
+
+_ADMIN_MESSAGES = {
+    "created": "イベントを登録しました",
+    "updated": "イベントを更新しました",
+    "deleted": "イベントを削除しました",
+}
+
+
+@app.get("/admin/events", response_class=HTMLResponse)
+async def admin_events(
+    request: Request,
+    msg: Optional[str] = None,
+    _: None = Depends(verify_admin),
+):
+    events = database.get_all_events()
+    return templates.TemplateResponse(request, "admin/events.html", {
+        "events": events,
+        "message": _ADMIN_MESSAGES.get(msg),
+    })
+
+
+@app.get("/admin/events/new", response_class=HTMLResponse)
+async def admin_events_new(
+    request: Request,
+    _: None = Depends(verify_admin),
+):
+    return templates.TemplateResponse(request, "admin/events_new.html", {})
+
+
+@app.post("/admin/events")
+async def admin_events_create(
+    request: Request,
+    _: None = Depends(verify_admin),
+    title: str = Form(...),
+    description: str = Form(...),
+    category: str = Form(...),
+    location: str = Form(...),
+    event_date: str = Form(...),
+    organizer: Optional[str] = Form(None),
+    url: Optional[str] = Form(None),
+    image_url: Optional[str] = Form(None),
+    area: Optional[str] = Form(None),
+):
+    data: dict = {
+        "title": title,
+        "description": description,
+        "category": category,
+        "location": location,
+        "event_date": event_date,
+    }
+    if organizer:
+        data["organizer"] = organizer
+    if url:
+        data["url"] = url
+    if image_url:
+        data["image_url"] = image_url
+    if area:
+        data["area"] = area
+
+    database.create_event(data)
+    return RedirectResponse("/admin/events?msg=created", status_code=303)
+
+
+@app.get("/admin/events/{event_id}/edit", response_class=HTMLResponse)
+async def admin_events_edit(
+    request: Request,
+    event_id: str,
+    _: None = Depends(verify_admin),
+):
+    event = database.get_event(event_id)
+    if not event:
+        return RedirectResponse("/admin/events", status_code=303)
+    return templates.TemplateResponse(request, "admin/events_edit.html", {
+        "event": event,
+    })
+
+
+@app.post("/admin/events/{event_id}/edit")
+async def admin_events_update(
+    request: Request,
+    event_id: str,
+    _: None = Depends(verify_admin),
+    title: str = Form(...),
+    description: str = Form(...),
+    category: str = Form(...),
+    location: str = Form(...),
+    event_date: str = Form(...),
+    organizer: Optional[str] = Form(None),
+    url: Optional[str] = Form(None),
+    image_url: Optional[str] = Form(None),
+    area: Optional[str] = Form(None),
+):
+    data = {
+        "title": title,
+        "description": description,
+        "category": category,
+        "location": location,
+        "event_date": event_date,
+        "organizer": organizer or None,
+        "url": url or None,
+        "image_url": image_url or None,
+        "area": area or None,
+    }
+    database.update_event(event_id, data)
+    return RedirectResponse("/admin/events?msg=updated", status_code=303)
+
+
+@app.post("/admin/events/{event_id}/delete")
+async def admin_events_delete(
+    request: Request,
+    event_id: str,
+    _: None = Depends(verify_admin),
+):
+    database.delete_event(event_id)
+    return RedirectResponse("/admin/events?msg=deleted", status_code=303)

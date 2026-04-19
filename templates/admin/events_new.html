@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}イベント登録 | 旗アプリ{% endblock %}
+{% block content %}
+
+<div class="mb-6">
+  <a href="/admin/events" class="text-sm text-gray-500 hover:text-green-600 transition-colors">← イベント一覧へ</a>
+  <p class="text-xs text-gray-400 mt-3 mb-0.5">管理画面</p>
+  <h1 class="text-xl font-bold text-gray-800">新規イベント登録</h1>
+</div>
+
+<form method="post" action="/admin/events"
+      class="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-5">
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      イベント名 <span class="text-red-400">*</span>
+    </label>
+    <input type="text" name="title" required
+           class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
+           placeholder="例：地域の夏祭り 2026">
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      カテゴリ <span class="text-red-400">*</span>
+    </label>
+    <select name="category" required
+            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400">
+      <option value="">選択してください</option>
+      <option value="ボランティア">ボランティア</option>
+      <option value="祭り・地域行事">祭り・地域行事</option>
+      <option value="ワークショップ・体験">ワークショップ・体験</option>
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      説明 <span class="text-red-400">*</span>
+    </label>
+    <textarea name="description" required rows="3"
+              class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400 resize-none"
+              placeholder="イベントの内容・雰囲気・持ち物など"></textarea>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      場所 <span class="text-red-400">*</span>
+    </label>
+    <input type="text" name="location" required
+           class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
+           placeholder="例：市民公園">
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      開催日 <span class="text-red-400">*</span>
+    </label>
+    <input type="date" name="event_date" required
+           class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400">
+  </div>
+
+  <hr class="border-gray-100">
+  <p class="text-xs text-gray-400">以下は任意項目です（後から編集できます）</p>
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">主催者名</label>
+    <input type="text" name="organizer"
+           class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
+           placeholder="例：○○市観光協会">
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">エリア</label>
+    <input type="text" name="area"
+           class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
+           placeholder="例：市内北地区">
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">関連リンク（URL）</label>
+    <input type="url" name="url"
+           class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
+           placeholder="https://...">
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-1">画像URL</label>
+    <input type="url" name="image_url"
+           class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-400"
+           placeholder="https://...">
+  </div>
+
+  <div class="pt-2">
+    <button type="submit"
+            class="w-full bg-green-600 text-white py-2.5 rounded-lg font-medium hover:bg-green-700 transition-colors">
+      登録する
+    </button>
+  </div>
+</form>
+
+{% endblock %}
