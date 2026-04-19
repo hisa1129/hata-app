@@ -134,16 +134,12 @@ async def raised(request: Request):
 
 @app.get("/flags/{flag_id}", response_class=HTMLResponse)
 async def flag_detail(request: Request, flag_id: str):
-    flag = mock_data.get_flag(flag_id)
+    flag = database.get_flag(flag_id)
     if not flag:
         return RedirectResponse("/find/step1", status_code=303)
-    event = mock_data.get_event(flag["event_id"])
-    # 同じイベントに既にエントリー済みか確認（棄却を除く）
-    my_entries = mock_data.get_my_entries()
-    already_entered = any(
-        e["flag"]["event_id"] == flag["event_id"] and e["status"] != "棄却"
-        for e in my_entries
-    )
+    event = database.get_event(flag["event_id"])
+    # Step 1はアカウント機能なし。重複エントリー検出は Step 2 で実装
+    already_entered = False
     return templates.TemplateResponse("flags/detail.html", {
         "request": request,
         "flag": flag,
@@ -154,16 +150,20 @@ async def flag_detail(request: Request, flag_id: str):
 
 @app.get("/flags/{flag_id}/manage", response_class=HTMLResponse)
 async def flag_manage(request: Request, flag_id: str):
-    flag = mock_data.get_flag(flag_id)
+    flag = database.get_flag(flag_id)
     if not flag:
         return RedirectResponse("/find/step1", status_code=303)
-    event = mock_data.get_event(flag["event_id"])
-    raised_hands = mock_data.get_raised_hands(flag_id)
+    event = database.get_event(flag["event_id"])
+    raised_hands = database.get_applicants_by_flag(flag_id)
+    approved_count = sum(1 for a in raised_hands if a["status"] == "承認済み")
+    max_approvals = database._GROUP_MAX.get(flag["group_size"], 2)
     return templates.TemplateResponse("flags/manage.html", {
         "request": request,
         "flag": flag,
         "event": event,
         "raised_hands": raised_hands,
+        "approved_count": approved_count,
+        "max_approvals": max_approvals,
     })
 
 
@@ -172,13 +172,41 @@ async def raise_hand(
     request: Request,
     flag_id: str,
     nickname: str = Form(...),
-    email: str = Form(...),
+    email: Optional[str] = Form(None),
     message: Optional[str] = Form(None),
     sns_type: Optional[str] = Form(None),
     sns_account: Optional[str] = Form(None),
 ):
-    # モック：DBへの保存は行わず完了ページへリダイレクト
+    data = {
+        "flag_id": flag_id,
+        "nickname": nickname,
+        "email": email or None,
+        "message": message or None,
+        "sns_type": sns_type or None,
+        "sns_account": sns_account or None,
+        "status": "申請中",
+    }
+    database.create_applicant(data)
     return RedirectResponse("/raised", status_code=303)
+
+
+@app.post("/applicants/{applicant_id}/approve")
+async def approve_applicant(request: Request, applicant_id: str):
+    applicant = database.get_applicant(applicant_id)
+    if not applicant:
+        return RedirectResponse("/my/flags", status_code=303)
+    database.update_applicant_status(applicant_id, "承認済み")
+    database.check_and_close_flag_if_full(applicant["flag_id"])
+    return RedirectResponse(f"/flags/{applicant['flag_id']}/manage", status_code=303)
+
+
+@app.post("/applicants/{applicant_id}/reject")
+async def reject_applicant(request: Request, applicant_id: str):
+    applicant = database.get_applicant(applicant_id)
+    if not applicant:
+        return RedirectResponse("/my/flags", status_code=303)
+    database.update_applicant_status(applicant_id, "否認")
+    return RedirectResponse(f"/flags/{applicant['flag_id']}/manage", status_code=303)
 
 
 # ──────────────────────────────────────────
@@ -325,7 +353,24 @@ async def create_submit(
     sns_account: Optional[str] = Form(None),
     email: Optional[str] = Form(None),
 ):
-    # モック：DBへの保存は行わず完了ページへリダイレクト
+    data = {
+        "event_id": event_id,
+        "nickname": nickname,
+        "anxiety_level": anxiety_level,
+        "vibe": vibe,
+        "reason": reason,
+        "group_size": group_size,
+        "gender_pref": gender_pref,
+        "member_type": member_type,
+        "meeting_place": meeting_place,
+        "meeting_time": meeting_time,
+        "deadline": deadline,
+        "status": "募集中",
+        "sns_type": sns_type or None,
+        "sns_account": sns_account or None,
+        "email": email or None,
+    }
+    database.create_flag(data)
     return RedirectResponse("/create/done", status_code=303)
 
 
@@ -340,9 +385,12 @@ async def create_done(request: Request):
 
 @app.get("/my/flags", response_class=HTMLResponse)
 async def my_flags(request: Request):
-    flags = mock_data.get_my_flags()
-    events = {e["id"]: e for e in mock_data.EVENTS}
-    raised_counts = {f["id"]: len(mock_data.get_raised_hands(f["id"])) for f in flags}
+    flags = database.get_all_flags()
+    all_events = database.get_all_events()
+    events = {e["id"]: e for e in all_events}
+    flag_ids = [f["id"] for f in flags]
+    counts = database.get_applicant_counts_for_flags(flag_ids)
+    raised_counts = {f["id"]: counts.get(f["id"], 0) for f in flags}
     return templates.TemplateResponse("my/flags.html", {
         "request": request,
         "flags": flags,
@@ -353,7 +401,7 @@ async def my_flags(request: Request):
 
 @app.get("/my/entries", response_class=HTMLResponse)
 async def my_entries(request: Request):
-    entries = mock_data.get_my_entries()
+    entries = database.get_all_applicants_joined()
     return templates.TemplateResponse("my/entries.html", {
         "request": request,
         "entries": entries,

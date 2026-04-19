@@ -24,12 +24,14 @@
           <p class="font-bold text-gray-900 text-sm">{{ entry.event.title }}</p>
         </div>
         <!-- ステータスバッジ -->
-        {% if entry.status == "承認待ち" %}
+        {% if entry.status == "申請中" %}
           <span class="ml-auto shrink-0 text-xs bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full font-medium">承認待ち</span>
         {% elif entry.status == "承認済み" %}
           <span class="ml-auto shrink-0 text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-full font-medium">承認済み</span>
+        {% elif entry.status == "取り下げ" %}
+          <span class="ml-auto shrink-0 text-xs bg-gray-100 text-gray-400 px-2.5 py-1 rounded-full font-medium">取り下げ</span>
         {% else %}
-          <span class="ml-auto shrink-0 text-xs bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full font-medium">棄却</span>
+          <span class="ml-auto shrink-0 text-xs bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full font-medium">否認</span>
         {% endif %}
       </div>
 
@@ -60,7 +62,7 @@
            class="text-xs text-green-600 font-medium hover:text-green-800 transition-colors">
           旗の詳細を見る →
         </a>
-        {% if entry.status == "承認待ち" %}
+        {% if entry.status == "申請中" or entry.status == "承認済み" %}
           <button type="button"
                   class="text-xs text-red-500 border border-red-200 px-3 py-1.5 rounded-full hover:bg-red-50 transition-colors">
             エントリーを取り下げる
