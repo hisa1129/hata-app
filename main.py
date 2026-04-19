@@ -93,8 +93,9 @@ async def find_list(
     category: str = Form(...),
     vibe: str = Form(...),
 ):
-    flags = mock_data.get_filtered_flags(anxiety_level, category, vibe)
-    events = {e["id"]: e for e in mock_data.EVENTS}
+    flags = database.get_filtered_flags(anxiety_level, category, vibe)
+    all_events = database.get_all_events()
+    events = {e["id"]: e for e in all_events}
     return templates.TemplateResponse("find/list.html", {
         "request": request,
         "flags": flags,
@@ -111,10 +112,10 @@ async def find_list(
 
 @app.get("/events/{event_id}", response_class=HTMLResponse)
 async def event_detail(request: Request, event_id: str):
-    event = mock_data.get_event(event_id)
+    event = database.get_event(event_id)
     if not event:
         return RedirectResponse("/", status_code=303)
-    flags = mock_data.get_flags_by_event(event_id)
+    flags = database.get_flags_by_event(event_id)
     return templates.TemplateResponse("events/detail.html", {
         "request": request,
         "event": event,
@@ -188,7 +189,7 @@ async def raise_hand(
 async def create_step1(request: Request):
     return templates.TemplateResponse("flags/create_step1.html", {
         "request": request,
-        "events": mock_data.EVENTS,
+        "events": database.get_all_events(),
     })
 
 
@@ -197,7 +198,7 @@ async def create_step2(
     request: Request,
     event_id: str = Form(...),
 ):
-    event = mock_data.get_event(event_id)
+    event = database.get_event(event_id)
     return templates.TemplateResponse("flags/create_step2.html", {
         "request": request,
         "event": event,
@@ -217,7 +218,7 @@ async def create_step3(
     sns_account: Optional[str] = Form(None),
     email: Optional[str] = Form(None),
 ):
-    event = mock_data.get_event(event_id)
+    event = database.get_event(event_id)
     return templates.TemplateResponse("flags/create_step3.html", {
         "request": request,
         "event": event,
@@ -247,7 +248,7 @@ async def create_step4(
     sns_account: Optional[str] = Form(None),
     email: Optional[str] = Form(None),
 ):
-    event = mock_data.get_event(event_id)
+    event = database.get_event(event_id)
     return templates.TemplateResponse("flags/create_step4.html", {
         "request": request,
         "event": event,
@@ -285,7 +286,7 @@ async def create_confirm(
     email: Optional[str] = Form(None),
 ):
     meeting_time = f"{meeting_date} {meeting_time_only}"
-    event = mock_data.get_event(event_id)
+    event = database.get_event(event_id)
     return templates.TemplateResponse("flags/create_confirm.html", {
         "request": request,
         "event": event,
