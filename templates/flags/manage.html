@@ -81,9 +81,13 @@
 
       <!-- メールアドレス -->
       {% if person.email %}
+      <div class="bg-blue-50 rounded-xl border border-blue-100 p-3 mb-3">
+        <p class="text-xs text-blue-600 font-semibold mb-1">メールアドレス</p>
+        <p class="text-sm font-bold text-blue-800">{{ person.email }}</p>
+      </div>
+      {% else %}
       <div class="bg-gray-50 rounded-xl p-3 mb-3">
-        <p class="text-xs text-gray-400 mb-1">メールアドレス</p>
-        <p class="text-sm text-gray-700">{{ person.email }}</p>
+        <p class="text-xs text-gray-400">メールアドレスの登録なし</p>
       </div>
       {% endif %}
 
