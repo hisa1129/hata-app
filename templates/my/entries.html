@@ -63,10 +63,12 @@
           旗の詳細を見る →
         </a>
         {% if entry.status == "申請中" or entry.status == "承認済み" %}
-          <button type="button"
-                  class="text-xs text-red-500 border border-red-200 px-3 py-1.5 rounded-full hover:bg-red-50 transition-colors">
-            エントリーを取り下げる
-          </button>
+          <form method="post" action="/applicants/{{ entry.id }}/withdraw">
+            <button type="submit"
+                    class="text-xs text-red-500 border border-red-200 px-3 py-1.5 rounded-full hover:bg-red-50 transition-colors">
+              エントリーを取り下げる
+            </button>
+          </form>
         {% endif %}
       </div>
 

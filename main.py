@@ -225,6 +225,15 @@ async def reject_applicant(request: Request, applicant_id: str):
     return RedirectResponse(f"/flags/{applicant['flag_id']}/manage", status_code=303)
 
 
+@app.post("/applicants/{applicant_id}/withdraw")
+async def withdraw_applicant(request: Request, applicant_id: str):
+    applicant = database.get_applicant(applicant_id)
+    if not applicant:
+        return RedirectResponse("/my/entries", status_code=303)
+    database.update_applicant_status(applicant_id, "取り下げ")
+    return RedirectResponse("/my/entries", status_code=303)
+
+
 # ──────────────────────────────────────────
 # 旗を立てる
 # ──────────────────────────────────────────
